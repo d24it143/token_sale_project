@@ -3,9 +3,9 @@ pragma solidity  ^0.5.11;
 contract DappToken{
 
     //Name
-    string public name = "DApp Token";
+    string public name = "D24IT143";
     //Symbol
-    string public symbol = "DAPP";
+    string public symbol = "D24";
     //Standard
     string public standard = 'DApp Token v1.0';
     //Supply
