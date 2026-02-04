@@ -28,6 +28,7 @@ App = {
         }
         console.log("Web3 Provider set to:", App.web3Provider);
         web3 = new Web3(App.web3Provider);
+        console.log("Web3 instance created:", web3.version);
         return App.initContracts();
     },
 
@@ -84,10 +85,12 @@ App = {
         content.hide();
 
         // Load account data
-        web3.eth.getCoinbase(function (err, account) {
-            if (err === null) {
-                App.account = account;
-                $('#accountAddress').html("Your Account: " + account);
+        web3.eth.getAccounts(function (err, accounts) {
+            if (err === null && accounts.length > 0) {
+                App.account = accounts[0];
+                $('#accountAddress').html("Your Account: " + App.account);
+            } else if (err) {
+                console.error("Could not get accounts:", err);
             }
         });
 
@@ -97,7 +100,8 @@ App = {
             return dappTokenSaleInstance.tokenPrice();
         }).then(function (tokenPrice) {
             App.tokenPrice = tokenPrice;
-            $('.token-price').html(web3.fromWei(App.tokenPrice, "ether").toNumber());
+            var priceInEth = web3.utils ? web3.utils.fromWei(App.tokenPrice.toString(), "ether") : web3.fromWei(App.tokenPrice, "ether");
+            $('.token-price').html(priceInEth);
             return dappTokenSaleInstance.tokensSold();
         }).then(function (tokensSold) {
             App.tokensSold = tokensSold.toNumber();

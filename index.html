@@ -95,7 +95,6 @@
             font-weight: 700;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
             letter-spacing: -1px;
@@ -380,7 +379,7 @@
         </div>
 
         <div class="footer">
-            Made by DHAVAL with love
+            Powered by Charlie Blockchain Network & CHARUSAT
         </div>
     </div>
 
@@ -411,19 +410,10 @@
             // Small delay to ensure MetaMask provider is injected
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            if (typeof window.ethers === 'undefined') {
-                console.error("Ethers.js not loaded.");
-                showStatus("Error: Ethers.js library failed to load. Please check your internet.", "error");
-                return;
-            }
-
-            const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
-
             if (!window.ethereum) {
                 console.error("MetaMask not found.");
                 showStatus("MetaMask not found! If installed, please ensure it's enabled for this site.", "error");
 
-                // Keep the button functional so they can try again after enabling
                 document.getElementById('connect-btn').onclick = async () => {
                     console.log("Retry connect...");
                     init();
@@ -434,23 +424,17 @@
             try {
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 const accounts = await provider.listAccounts();
-                console.log("Detected accounts:", accounts);
+                console.log("Connected accounts:", accounts);
 
                 if (accounts.length > 0) {
-                    console.log("Auto-connecting...");
                     await connectWallet();
-                } else {
-                    console.log("Waiting for user to click connect.");
                 }
 
-                document.getElementById('connect-btn').onclick = async () => {
-                    console.log("Connect button clicked");
-                    await connectWallet();
-                };
+                document.getElementById('connect-btn').onclick = connectWallet;
                 document.getElementById('action-btn').onclick = performAction;
             } catch (e) {
-                console.error("Initialization failed:", e);
-                showStatus("Init error: " + e.message, "error");
+                console.error("Init error:", e);
+                showStatus("Initialization error: " + e.message, "error");
             }
         }
 
@@ -531,6 +515,7 @@
                     await tx.wait();
                     showStatus("Successfully bought " + amount + " D24!", "success");
                 } else {
+                    // For selling, we first need to approve the sale contract
                     showStatus("Approving tokens for sale...", "success");
                     const approveTx = await tokenContract.approve(SALE_ADDRESS, amount);
                     await approveTx.wait();
@@ -559,7 +544,7 @@
             }, 8000);
         }
 
-        window.addEventListener('DOMContentLoaded', init);
+        window.onload = init;
     </script>
 
 </body>
