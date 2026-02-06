@@ -1,8 +1,8 @@
-const DappToken = artifacts.require("DappToken");
+const D24Token = artifacts.require("D24Token");
 
 module.exports = async function (callback) {
     try {
-        const token = await DappToken.deployed();
+        const token = await D24Token.deployed();
         const name = await token.name();
         const symbol = await token.symbol();
         const supply = await token.totalSupply();

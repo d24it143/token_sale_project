@@ -147,7 +147,7 @@
   "sourceMap": "83:1788:1:-;;;335:174;8:9:-1;5:2;;;30:1;27;20:12;5:2;335:174:1;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;335:174:1;;;;;;;;;;;;;;;;;;;;;;;;;418:10;410:5;;:18;;;;;;;;;;;;;;;;;;454:14;438:13;;:30;;;;;;;;;;;;;;;;;;491:11;478:10;:24;;;;335:174;;83:1788;;;;;;",
   "deployedSourceMap": "83:1788:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;660:370;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;660:370:1;;;;;;;;;;;;;;;;;:::i;:::-;;1599:270;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1599:270:1;;;:::i;:::-;;204:25;;8:9:-1;5:2;;;30:1;27;20:12;5:2;204:25:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;138:29;;8:9:-1;5:2;;;30:1;27;20:12;5:2;138:29:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;1106:487;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1106:487:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1106:487:1;;;;;;;;;;;;;;;;;:::i;:::-;;173:25;;8:9:-1;5:2;;;30:1;27;20:12;5:2;173:25:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;660:370;750:37;759:15;776:10;;750:8;:37::i;:::-;737:9;:50;729:59;;;;;;848:15;806:13;;;;;;;;;;;:23;;;838:4;806:38;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;806:38:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;806:38:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;806:38:1;;;;;;;;;;;;;;;;:57;;798:66;;;;;;882:13;;;;;;;;;;;:22;;;905:10;917:15;882:51;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;882:51:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;882:51:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;882:51:1;;;;;;;;;;;;;;;;874:60;;;;;;959:15;945:10;;:29;;;;;;;;;;;990:33;995:10;1007:15;990:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;660:370;:::o;1599:270::-;1657:5;;;;;;;;;;;1643:19;;:10;:19;;;1635:28;;;;;;1681:13;;;;;;;;;;;:22;;;1704:5;;;;;;;;;;;1711:13;;;;;;;;;;;:23;;;1743:4;1711:38;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1711:38:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1711:38:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1711:38:1;;;;;;;;;;;;;;;;1681:69;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1681:69:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1681:69:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1681:69:1;;;;;;;;;;;;;;;;1673:78;;;;;;1825:5;;;;;;;;;;;:14;;:37;1840:21;1825:37;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1825:37:1;1599:270::o;204:25::-;;;;:::o;138:29::-;;;;;;;;;;;;;:::o;1106:487::-;1215:15;1176:13;;;;;;;;;;;:23;;;1200:10;1176:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1176:35:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1176:35:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1176:35:1;;;;;;;;;;;;;;;;:54;;1168:63;;;;;;1241:17;1261:37;1270:15;1287:10;;1261:8;:37::i;:::-;1241:57;;1341:9;1316:21;:34;;1308:43;;;;;;1370:13;;;;;;;;;;;:26;;;1397:10;1417:4;1424:15;1370:70;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1370:70:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1370:70:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1370:70:1;;;;;;;;;;;;;;;;1362:79;;;;;;1460:10;:19;;:30;1480:9;1460:30;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1460:30:1;1515:15;1501:10;;:29;;;;;;;;;;;1554:32;1558:10;1570:15;1554:32;;;;;;;;;;;;;;;;;;;;;;;;;;;;1106:487;;:::o;173:25::-;;;;:::o;515:121::-;572:6;603:1;598;:6;:30;;;;627:1;622;617;613;:5;609:9;;;608:15;;;;;;:20;598:30;590:39;;;;;;515:121;;;;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.5.0;\n\nimport \"./D24Token.sol\";\n\ncontract D24TokenSale {\n    address payable admin;\n    D24Token public tokenContract;\n    uint256 public tokenPrice;\n    uint256 public tokensSold;\n\n    event Sell(address _buyer, uint256 _amount);\n    event Buy(address _seller, uint256 _amount);\n\n    constructor(D24Token _tokenContract, uint256 _tokenPrice) public {\n        admin = msg.sender;\n        tokenContract = _tokenContract;\n        tokenPrice = _tokenPrice;\n    }\n\n    function multiply(uint x, uint y) internal pure returns (uint z) {\n        require(y == 0 || (z = x * y) / y == x);\n    }\n\n    // Buy tokens\n    function buyTokens(uint256 _numberOfTokens) public payable {\n        require(msg.value == multiply(_numberOfTokens, tokenPrice));\n        require(tokenContract.balanceOf(address(this)) >= _numberOfTokens);\n        require(tokenContract.transfer(msg.sender, _numberOfTokens));\n\n        tokensSold += _numberOfTokens;\n\n        emit Sell(msg.sender, _numberOfTokens);\n    }\n\n    // Sell tokens (User sends tokens back to contract, receives ETH)\n    function sellTokens(uint256 _numberOfTokens) public {\n        require(tokenContract.balanceOf(msg.sender) >= _numberOfTokens);\n        uint256 ethAmount = multiply(_numberOfTokens, tokenPrice);\n        require(address(this).balance >= ethAmount);\n\n        require(tokenContract.transferFrom(msg.sender, address(this), _numberOfTokens));\n        \n        msg.sender.transfer(ethAmount);\n\n        tokensSold -= _numberOfTokens;\n        \n        emit Buy(msg.sender, _numberOfTokens);\n    }\n\n    function endSale() public {\n        require(msg.sender == admin);\n        require(tokenContract.transfer(admin, tokenContract.balanceOf(address(this))));\n\n        // Transfer all ETH remaining in the contract to admin\n        admin.transfer(address(this).balance);\n    }\n}\n",
-  "sourcePath": "/Users/dhavalvarvariya/Downloads/CHARUSAT/Blockchain/token_sale-1/contracts/D24TokenSale.sol",
+  "sourcePath": "/Users/dhavalvarvariya/Downloads/CHARUSAT/Blockchain/token_sale_project/contracts/D24TokenSale.sol",
   "ast": {
     "absolutePath": "project:/contracts/D24TokenSale.sol",
     "exportedSymbols": {
@@ -477,7 +477,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 413,
+                        "referencedDeclaration": 777,
                         "src": "418:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -927,10 +927,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "590:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1091,7 +1091,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 413,
+                            "referencedDeclaration": 777,
                             "src": "737:3:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -1198,10 +1198,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "729:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1253,7 +1253,7 @@
                                   "name": "this",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 429,
+                                  "referencedDeclaration": 793,
                                   "src": "838:4:1",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_contract$_D24TokenSale_$398",
@@ -1377,10 +1377,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "798:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1420,7 +1420,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 413,
+                              "referencedDeclaration": 777,
                               "src": "905:3:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -1519,10 +1519,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "874:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1605,7 +1605,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 413,
+                          "referencedDeclaration": 777,
                           "src": "995:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1766,7 +1766,7 @@
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 413,
+                                "referencedDeclaration": 777,
                                 "src": "1200:3:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_message",
@@ -1869,10 +1869,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "1168:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2025,7 +2025,7 @@
                                 "name": "this",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 429,
+                                "referencedDeclaration": 793,
                                 "src": "1324:4:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_contract$_D24TokenSale_$398",
@@ -2114,10 +2114,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "1308:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2157,7 +2157,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 413,
+                              "referencedDeclaration": 777,
                               "src": "1397:3:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -2187,7 +2187,7 @@
                                 "name": "this",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 429,
+                                "referencedDeclaration": 793,
                                 "src": "1417:4:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_contract$_D24TokenSale_$398",
@@ -2311,10 +2311,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "1362:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2372,7 +2372,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 413,
+                          "referencedDeclaration": 777,
                           "src": "1460:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2483,7 +2483,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 413,
+                          "referencedDeclaration": 777,
                           "src": "1558:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2641,7 +2641,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 413,
+                            "referencedDeclaration": 777,
                             "src": "1643:3:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -2695,10 +2695,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "1635:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2755,7 +2755,7 @@
                                     "name": "this",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 429,
+                                    "referencedDeclaration": 793,
                                     "src": "1743:4:1",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_contract$_D24TokenSale_$398",
@@ -2911,10 +2911,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        416,
-                        417
+                        780,
+                        781
                       ],
-                      "referencedDeclaration": 416,
+                      "referencedDeclaration": 780,
                       "src": "1673:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2954,7 +2954,7 @@
                               "name": "this",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 429,
+                              "referencedDeclaration": 793,
                               "src": "1848:4:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_contract$_D24TokenSale_$398",
@@ -3543,7 +3543,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 413,
+                                  "referencedDeclaration": 777,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -3814,10 +3814,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4166,10 +4166,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4210,7 +4210,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 413,
+                                      "referencedDeclaration": 777,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -4335,10 +4335,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4452,7 +4452,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 429,
+                                          "referencedDeclaration": 793,
                                           "type": "contract D24TokenSale",
                                           "value": "this"
                                         },
@@ -4525,10 +4525,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4609,7 +4609,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 413,
+                                      "referencedDeclaration": 777,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -4760,7 +4760,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 413,
+                                  "referencedDeclaration": 777,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -4895,10 +4895,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4990,7 +4990,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 413,
+                                          "referencedDeclaration": 777,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -5172,10 +5172,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -5250,7 +5250,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 429,
+                                          "referencedDeclaration": 793,
                                           "type": "contract D24TokenSale",
                                           "value": "this"
                                         },
@@ -5323,10 +5323,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -5411,7 +5411,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 413,
+                                      "referencedDeclaration": 777,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -5464,7 +5464,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 429,
+                                      "referencedDeclaration": 793,
                                       "type": "contract D24TokenSale",
                                       "value": "this"
                                     },
@@ -5558,7 +5558,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 413,
+                                      "referencedDeclaration": 777,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -5709,7 +5709,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 413,
+                                  "referencedDeclaration": 777,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -5822,10 +5822,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -5866,7 +5866,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 413,
+                                      "referencedDeclaration": 777,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -5934,10 +5934,10 @@
                                 }
                               ],
                               "overloadedDeclarations": [
-                                416,
-                                417
+                                780,
+                                781
                               ],
-                              "referencedDeclaration": 416,
+                              "referencedDeclaration": 780,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -6105,7 +6105,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 429,
+                                          "referencedDeclaration": 793,
                                           "type": "contract D24TokenSale",
                                           "value": "this"
                                         },
@@ -6243,7 +6243,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 429,
+                                      "referencedDeclaration": 793,
                                       "type": "contract D24TokenSale",
                                       "value": "this"
                                     },
@@ -6296,6 +6296,12 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0xda1Ae513F117450a160EB35c679673D56Dc98772",
+      "transactionHash": "0x3eec11409aa01c70039b354fbe7f3495629c2f70d9c184e0c9b58f1efb125c77"
+    },
     "1770105709446": {
       "events": {},
       "links": {},
@@ -6304,7 +6310,7 @@
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-02-04T02:40:56.533Z",
+  "updatedAt": "2026-02-05T12:46:06.929Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

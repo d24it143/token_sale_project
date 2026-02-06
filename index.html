@@ -95,6 +95,7 @@
             font-weight: 700;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
             letter-spacing: -1px;
@@ -375,6 +376,16 @@
                 </button>
 
                 <div id="status-msg" class="status-msg"></div>
+
+                <!-- Debug Panel -->
+                <div
+                    style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 11px; font-family: monospace; color: #aaa; text-align: left;">
+                    <div><strong>DEBUG INFO:</strong></div>
+                    <div>Chain ID: <span id="debug-chain">Loading...</span></div>
+                    <div>Block #: <span id="debug-block">Loading...</span></div>
+                    <div>Signer: <span id="debug-signer">Loading...</span></div>
+                    <div style="color: #fca5a5; margin-top:5px;" id="debug-error"></div>
+                </div>
             </div>
         </div>
 
@@ -388,8 +399,8 @@
         let mode = 'buy';
         const TOKEN_PRICE = ethers.utils.parseEther("0.001");
 
-        const TOKEN_ADDRESS = "0xe3eAc745F4C2bD9244b526BbBdE63B14f423d163";
-        const SALE_ADDRESS = "0x57ea97e9C41c3E4c6fa015d6De220b008dEc709E";
+        const TOKEN_ADDRESS = "0xF7EAF668104E2B08DCb80B8cDc8d00102F8385cf";
+        const SALE_ADDRESS = "0xda1Ae513F117450a160EB35c679673D56Dc98772";
 
         const TOKEN_ABI = [
             "function balanceOf(address owner) view returns (uint256)",
@@ -457,26 +468,46 @@
                 document.getElementById('app-section').classList.remove('hidden');
 
                 showStatus("Connected to " + address.substring(0, 8), "success");
+
+                // Debug Info Update
+                const currentNetwork = await provider.getNetwork();
+                const currentBlock = await provider.getBlockNumber();
+                document.getElementById('debug-chain').innerText = `${currentNetwork.chainId} (${currentNetwork.name})`;
+                document.getElementById('debug-block').innerText = currentBlock;
+                document.getElementById('debug-signer').innerText = address;
+
                 updateBalances();
                 setInterval(updateBalances, 5000);
             } catch (err) {
                 console.error("Connection failed:", err);
                 showStatus("Connection failed: " + err.message, "error");
+                document.getElementById('debug-error').innerText = "Connect Error: " + err.message;
             }
         }
 
         async function updateBalances() {
-            const address = await signer.getAddress();
-            const ethBalance = await provider.getBalance(address);
-            const d24Balance = await tokenContract.balanceOf(address);
-            const sold = await saleContract.tokensSold();
+            try {
+                // Refresh Debug Info
+                if (provider) {
+                    const blockNumber = await provider.getBlockNumber();
+                    document.getElementById('debug-block').innerText = blockNumber;
+                }
 
-            document.getElementById('eth-balance').innerText = ethers.utils.formatEther(ethBalance).substring(0, 6) + " ETH";
-            document.getElementById('d24-balance').innerText = d24Balance.toString();
-            document.getElementById('total-sold').innerText = sold.toString();
+                const address = await signer.getAddress();
+                const ethBalance = await provider.getBalance(address);
+                const d24Balance = await tokenContract.balanceOf(address);
+                const sold = await saleContract.tokensSold();
 
-            const progress = (sold.toNumber() / 750000) * 100;
-            document.getElementById('progress-bar').style.width = progress + "%";
+                document.getElementById('eth-balance').innerText = ethers.utils.formatEther(ethBalance).substring(0, 6) + " ETH";
+                document.getElementById('d24-balance').innerText = d24Balance.toString();
+                document.getElementById('total-sold').innerText = sold.toString();
+
+                const progress = (sold.toNumber() / 750000) * 100;
+                document.getElementById('progress-bar').style.width = progress + "%";
+            } catch (err) {
+                console.error("Update Error:", err);
+                document.getElementById('debug-error').innerText = "Update Error: " + (err.reason || err.message);
+            }
         }
 
         function setMode(newMode) {
