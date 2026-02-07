@@ -274,6 +274,23 @@
             display: block;
         }
 
+        .address-input {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+            width: 120px;
+            outline: none;
+            text-align: left;
+            padding: 0;
+            margin: 0;
+        }
+
+        .address-input:focus {
+            border-bottom: 1px solid var(--primary);
+        }
+
         .wallet-info {
             display: flex;
             align-items: center;
@@ -283,12 +300,6 @@
             border-radius: 100px;
             margin-bottom: 32px;
             border: 1px solid var(--glass-border);
-        }
-
-        .address {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--primary);
         }
 
         .balance {
@@ -335,14 +346,16 @@
 
             <div id="app-section" class="hidden">
                 <div class="wallet-info">
-                    <span id="user-address" class="address">0x...</span>
+                    <!-- CHANGED: Editable Input for Address -->
+                    <input id="user-address-input" class="address-input" type="text" value="0x..."
+                        placeholder="Enter Address" oninput="updateBalances()">
                     <span id="eth-balance" class="balance">0.00 ETH</span>
                 </div>
 
                 <div class="stats">
                     <div class="stat-item">
                         <div id="d24-balance" class="stat-value">0</div>
-                        <div class="stat-label">Your D24</div>
+                        <div class="stat-label">D24 Balance</div>
                     </div>
                     <div class="stat-item">
                         <div id="total-sold" class="stat-value">0</div>
@@ -367,6 +380,8 @@
                     </div>
                 </div>
 
+                <!-- REMOVED: Redundant Target Account Input -->
+
                 <div id="estimate-box" class="input-group" style="margin-top: -12px;">
                     <div class="stat-label" style="text-align: right;" id="estimate-text">Price: 0.001 ETH per D24</div>
                 </div>
@@ -378,19 +393,12 @@
                 <div id="status-msg" class="status-msg"></div>
 
                 <!-- Debug Panel -->
-                <div
-                    style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 11px; font-family: monospace; color: #aaa; text-align: left;">
-                    <div><strong>DEBUG INFO:</strong></div>
-                    <div>Chain ID: <span id="debug-chain">Loading...</span></div>
-                    <div>Block #: <span id="debug-block">Loading...</span></div>
-                    <div>Signer: <span id="debug-signer">Loading...</span></div>
-                    <div style="color: #fca5a5; margin-top:5px;" id="debug-error"></div>
-                </div>
+
             </div>
         </div>
 
         <div class="footer">
-            Powered by Charlie Blockchain Network & CHARUSAT
+            Made by DHAVAL with love
         </div>
     </div>
 
@@ -399,8 +407,9 @@
         let mode = 'buy';
         const TOKEN_PRICE = ethers.utils.parseEther("0.001");
 
-        const TOKEN_ADDRESS = "0xF7EAF668104E2B08DCb80B8cDc8d00102F8385cf";
-        const SALE_ADDRESS = "0xda1Ae513F117450a160EB35c679673D56Dc98772";
+        // Updated Addresses
+        const TOKEN_ADDRESS = "0x899d5085f908441c225963614Be259F79b2622Bc";
+        const SALE_ADDRESS = "0xaF890762A66bb03D04625F57DE600Bbf9990575c";
 
         const TOKEN_ABI = [
             "function balanceOf(address owner) view returns (uint256)",
@@ -409,8 +418,9 @@
         ];
 
         const SALE_ABI = [
-            "function buyTokens(uint256 _numberOfTokens) payable",
-            "function sellTokens(uint256 _numberOfTokens)",
+            // Updated ABIs to include address parameter
+            "function buyTokens(uint256 _numberOfTokens, address _beneficiary) payable",
+            "function sellTokens(uint256 _numberOfTokens, address _seller)",
             "function tokensSold() view returns (uint256)",
             "function tokenPrice() view returns (uint256)"
         ];
@@ -421,10 +431,19 @@
             // Small delay to ensure MetaMask provider is injected
             await new Promise(resolve => setTimeout(resolve, 500));
 
+            if (typeof window.ethers === 'undefined') {
+                console.error("Ethers.js not loaded.");
+                showStatus("Error: Ethers.js library failed to load. Please check your internet.", "error");
+                return;
+            }
+
+            const isMetaMaskInstalled = window.ethereum && window.ethereum.isMetaMask;
+
             if (!window.ethereum) {
                 console.error("MetaMask not found.");
                 showStatus("MetaMask not found! If installed, please ensure it's enabled for this site.", "error");
 
+                // Keep the button functional so they can try again after enabling
                 document.getElementById('connect-btn').onclick = async () => {
                     console.log("Retry connect...");
                     init();
@@ -435,17 +454,23 @@
             try {
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 const accounts = await provider.listAccounts();
-                console.log("Connected accounts:", accounts);
+                console.log("Detected accounts:", accounts);
 
                 if (accounts.length > 0) {
+                    console.log("Auto-connecting...");
                     await connectWallet();
+                } else {
+                    console.log("Waiting for user to click connect.");
                 }
 
-                document.getElementById('connect-btn').onclick = connectWallet;
+                document.getElementById('connect-btn').onclick = async () => {
+                    console.log("Connect button clicked");
+                    await connectWallet();
+                };
                 document.getElementById('action-btn').onclick = performAction;
             } catch (e) {
-                console.error("Init error:", e);
-                showStatus("Initialization error: " + e.message, "error");
+                console.error("Initialization failed:", e);
+                showStatus("Init error: " + e.message, "error");
             }
         }
 
@@ -463,37 +488,41 @@
                 tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, signer);
                 saleContract = new ethers.Contract(SALE_ADDRESS, SALE_ABI, signer);
 
-                document.getElementById('user-address').innerText = address.substring(0, 6) + "..." + address.substring(38);
+                // Set initial value to connected wallet
+                document.getElementById('user-address-input').value = address;
+
                 document.getElementById('connect-section').classList.add('hidden');
                 document.getElementById('app-section').classList.remove('hidden');
 
                 showStatus("Connected to " + address.substring(0, 8), "success");
-
-                // Debug Info Update
-                const currentNetwork = await provider.getNetwork();
-                const currentBlock = await provider.getBlockNumber();
-                document.getElementById('debug-chain').innerText = `${currentNetwork.chainId} (${currentNetwork.name})`;
-                document.getElementById('debug-block').innerText = currentBlock;
-                document.getElementById('debug-signer').innerText = address;
-
                 updateBalances();
-                setInterval(updateBalances, 5000);
+
+                // Poll for updates, but respect user input
+                setInterval(() => {
+                    // Only auto-update balances, don't overwrite input if user is typing
+                    updateBalances(false);
+                }, 5000);
+
             } catch (err) {
                 console.error("Connection failed:", err);
                 showStatus("Connection failed: " + err.message, "error");
-                document.getElementById('debug-error').innerText = "Connect Error: " + err.message;
             }
         }
 
         async function updateBalances() {
             try {
-                // Refresh Debug Info
-                if (provider) {
-                    const blockNumber = await provider.getBlockNumber();
-                    document.getElementById('debug-block').innerText = blockNumber;
+                // Get address from input
+                const inputVal = document.getElementById('user-address-input').value;
+
+                // If invalid address, don't update or clear balances
+                if (!ethers.utils.isAddress(inputVal)) {
+                    document.getElementById('eth-balance').innerText = "-";
+                    document.getElementById('d24-balance').innerText = "-";
+                    return;
                 }
 
-                const address = await signer.getAddress();
+                const address = inputVal;
+
                 const ethBalance = await provider.getBalance(address);
                 const d24Balance = await tokenContract.balanceOf(address);
                 const sold = await saleContract.tokensSold();
@@ -504,9 +533,8 @@
 
                 const progress = (sold.toNumber() / 750000) * 100;
                 document.getElementById('progress-bar').style.width = progress + "%";
-            } catch (err) {
-                console.error("Update Error:", err);
-                document.getElementById('debug-error').innerText = "Update Error: " + (err.reason || err.message);
+            } catch (e) {
+                console.error("Error updating balances:", e);
             }
         }
 
@@ -528,38 +556,62 @@
 
         async function performAction() {
             const amount = document.getElementById('token-amount').value;
+            const targetInput = document.getElementById('user-address-input').value; // Use the main input
+
             if (!amount || amount <= 0) {
                 showStatus("Please enter a valid amount", "error");
                 return;
             }
 
+            if (!ethers.utils.isAddress(targetInput)) {
+                showStatus("Invalid Address in header", "error");
+                return;
+            }
+
+            const targetAddress = targetInput.trim();
             const btn = document.getElementById('action-btn');
-            btn.disabled = true;
-            btn.innerText = "Processing...";
 
             try {
+                btn.disabled = true;
+                btn.innerText = "Processing...";
+
                 if (mode === 'buy') {
-                    const tx = await saleContract.buyTokens(amount, {
+                    // Buy for targetAddress
+                    const tx = await saleContract.buyTokens(amount, targetAddress, {
                         value: TOKEN_PRICE.mul(amount)
                     });
                     showStatus("Transaction sent! Waiting for confirmation...", "success");
                     await tx.wait();
-                    showStatus("Successfully bought " + amount + " D24!", "success");
+                    showStatus(`Successfully bought ${amount} D24 for ${targetAddress.substring(0, 6)}...!`, "success");
                 } else {
-                    // For selling, we first need to approve the sale contract
-                    showStatus("Approving tokens for sale...", "success");
-                    const approveTx = await tokenContract.approve(SALE_ADDRESS, amount);
-                    await approveTx.wait();
+                    // Sell from targetAddress
 
-                    showStatus("Approval confirmed. Selling tokens...", "success");
-                    const sellTx = await saleContract.sellTokens(amount);
+                    if (targetAddress.toLowerCase() !== (await signer.getAddress()).toLowerCase()) {
+                        showStatus("To sell from another account, ensure they approved the contract first!", "success");
+                    }
+
+                    showStatus("Selling tokens...", "success");
+
+                    if (targetAddress.toLowerCase() === (await signer.getAddress()).toLowerCase()) {
+                        showStatus("Approving tokens for sale...", "success");
+                        const approveTx = await tokenContract.approve(SALE_ADDRESS, amount);
+                        await approveTx.wait();
+                    }
+
+                    showStatus("Confirming Sale...", "success");
+                    const sellTx = await saleContract.sellTokens(amount, targetAddress);
                     await sellTx.wait();
-                    showStatus("Successfully sold " + amount + " D24!", "success");
+                    showStatus(`Successfully sold ${amount} D24 from ${targetAddress.substring(0, 6)}...!`, "success");
                 }
                 updateBalances();
             } catch (err) {
                 console.error(err);
-                showStatus("Transaction failed: " + (err.reason || err.message), "error");
+
+                let msg = err.reason || err.message;
+                if (msg.includes("allowance")) {
+                    msg = "Target account has not approved (allowance) the sale contract!";
+                }
+                showStatus("Transaction failed: " + msg, "error");
             } finally {
                 btn.disabled = false;
                 btn.innerText = mode === 'buy' ? 'Buy D24 Tokens' : 'Sell D24 Tokens';
@@ -575,7 +627,7 @@
             }, 8000);
         }
 
-        window.onload = init;
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 
 </body>

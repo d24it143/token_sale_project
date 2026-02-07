@@ -23,29 +23,29 @@ contract D24TokenSale {
     }
 
     // Buy tokens
-    function buyTokens(uint256 _numberOfTokens) public payable {
+    function buyTokens(uint256 _numberOfTokens, address _beneficiary) public payable {
         require(msg.value == multiply(_numberOfTokens, tokenPrice));
         require(tokenContract.balanceOf(address(this)) >= _numberOfTokens);
-        require(tokenContract.transfer(msg.sender, _numberOfTokens));
+        require(tokenContract.transfer(_beneficiary, _numberOfTokens));
 
         tokensSold += _numberOfTokens;
 
-        emit Sell(msg.sender, _numberOfTokens);
+        emit Sell(_beneficiary, _numberOfTokens);
     }
 
     // Sell tokens (User sends tokens back to contract, receives ETH)
-    function sellTokens(uint256 _numberOfTokens) public {
-        require(tokenContract.balanceOf(msg.sender) >= _numberOfTokens);
+    function sellTokens(uint256 _numberOfTokens, address payable _seller) public {
+        require(tokenContract.balanceOf(_seller) >= _numberOfTokens);
         uint256 ethAmount = multiply(_numberOfTokens, tokenPrice);
         require(address(this).balance >= ethAmount);
 
-        require(tokenContract.transferFrom(msg.sender, address(this), _numberOfTokens));
+        require(tokenContract.transferFrom(_seller, address(this), _numberOfTokens));
         
-        msg.sender.transfer(ethAmount);
+        _seller.transfer(ethAmount);
 
         tokensSold -= _numberOfTokens;
         
-        emit Buy(msg.sender, _numberOfTokens);
+        emit Buy(_seller, _numberOfTokens);
     }
 
     function endSale() public {
